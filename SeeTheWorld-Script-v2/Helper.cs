@@ -41,33 +41,55 @@ namespace SeeTheWorld_Script_v2
                        ?? throw new ArgumentNullException(nameof(storagePath));
         }
 
+        /// <summary>
+        /// Get picture info from bing api.
+        /// </summary>
+        /// <returns>Picture info</returns>
         public async Task<Image> GetPictureInfoAsync()
         {
             Console.WriteLine("Start get image info from bing.");
 
-            var url = new Uri(_bingBase, _bingApi);
+            var url = new Uri(BingBase, BingApi);
 
             var resp = await HttpClient.GetFromJsonAsync<Model>(url, _serializerOptions);
 
             return resp?.Images?[0];
         }
 
+        /// <summary>
+        /// Save picture file from bing to local.
+        /// </summary>
+        /// <param name="picture">picture info</param>
+        /// <param name="path">path to save the picture, include the file name.</param>
+        /// <returns></returns>
         public async Task SavePictureAsync(Image picture, string path)
         {
             if (picture == null)
                 throw new ArgumentNullException(nameof(picture));
             var pictureResp
-                = await HttpClient.GetAsync(new Uri(_bingBase, picture.Url));
+                = await HttpClient.GetAsync(new Uri(BingBase, picture.Url));
 
             await File.WriteAllBytesAsync(
                 path,
                 await pictureResp.Content.ReadAsByteArrayAsync());
         }
 
-        public async Task AddPictureToApiAsync(string fileName)
-        {
-
-        }
+        /// <summary>
+        /// Add the picture to database var api.
+        /// </summary>
+        /// <param name="picture"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public async Task AddPictureToApiAsync(Image picture, string fileName)
+            => await HttpClient.PostAsync(_apiBase,
+                    new StringContent(
+                        JsonSerializer.Serialize(new
+                        {
+                            title = picture.Copyright,
+                            url = new Uri(_apiBase, fileName)
+                        })
+                    )
+                );
 
         public async Task FlushAliCdn(IEnumerable<string> urls)
         {
