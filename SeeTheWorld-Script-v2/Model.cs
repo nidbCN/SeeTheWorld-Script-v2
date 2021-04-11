@@ -1,4 +1,7 @@
-﻿namespace SeeTheWorld_Script_v2
+﻿using System;
+using System.Net.Http;
+
+namespace SeeTheWorld_Script_v2
 {
     public class Model
     {
@@ -21,6 +24,5 @@
         public int Drk { get; set; }
         public int Top { get; set; }
         public int Bot { get; set; }
-        public object[] Hs { get; set; }
     }
 }

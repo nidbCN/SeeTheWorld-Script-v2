@@ -1,20 +1,9 @@
 ﻿using System;
-using System.Threading.Tasks;
+using SeeTheWorld_Script_v2;
 
-namespace SeeTheWorld_Script_v2
-{
-    class Program
-    {
+Console.WriteLine("Hello World!");
 
+var httpHelper = new Helper();
 
-        static async Task Main(string[] args)
-        {
-            Console.WriteLine("Hello World!");
-            Helper httpHelper = new();
-
-            await httpHelper.GetPictureInfo();
-        }
-
-
-    }
-}
+var pictureInfo = await httpHelper.GetPictureInfoAsync();
+await httpHelper.SavePictureAsync(pictureInfo);
