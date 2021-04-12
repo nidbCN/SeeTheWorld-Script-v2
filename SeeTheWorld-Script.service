@@ -1,0 +1,5 @@
+[Unit]
+Description=Dump bing pictures
+
+[Service]
+ExecStart=/root/data/services/SeeTheWorld-Script-v2/main.py
