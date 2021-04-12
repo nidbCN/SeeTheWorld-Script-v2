@@ -14,7 +14,7 @@ namespace AliCDNRefresher
             JsonSerializer.Deserialize<SecretModel>(
                 File.ReadAllText(
                     Path.Combine(
-                        Environment.CurrentDirectory,
+                        AppDomain.CurrentDomain.BaseDirectory,
                         path
                     )
                 )
