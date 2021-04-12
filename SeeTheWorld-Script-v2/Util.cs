@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.Json;
 
 namespace AliCDNRefresher
@@ -13,7 +14,7 @@ namespace AliCDNRefresher
             JsonSerializer.Deserialize<SecretModel>(
                 File.ReadAllText(
                     Path.Combine(
-                        Directory.GetCurrentDirectory(),
+                        Environment.CurrentDirectory,
                         path
                     )
                 )
