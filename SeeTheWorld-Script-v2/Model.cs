@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net.Http;
-
-namespace SeeTheWorld_Script_v2
+﻿namespace SeeTheWorld_Script_v2
 {
     public class Model
     {

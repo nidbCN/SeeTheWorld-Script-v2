@@ -6,4 +6,8 @@
     <RootNamespace>SeeTheWorld_Script_v2</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AlibabaCloud.SDK.Cdn20180510" Version="1.0.1" />
+  </ItemGroup>
+
 </Project>

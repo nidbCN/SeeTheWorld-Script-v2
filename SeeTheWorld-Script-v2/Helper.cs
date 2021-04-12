@@ -1,19 +1,19 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AliCDNRefresher;
 
 namespace SeeTheWorld_Script_v2
 {
     public class Helper
     {
-        private Uri BingBase => new("https://cn.bing.com/");
+        private static Uri BingBase => new("https://cn.bing.com/");
 
-        private string BingApi => "HPImageArchive.aspx?format=js&n=1&pid=hp";
+        private static string BingApi => "HPImageArchive.aspx?format=js&n=1&pid=hp";
 
         private readonly string _storagePath;
 
@@ -60,17 +60,18 @@ namespace SeeTheWorld_Script_v2
         /// Save picture file from bing to local.
         /// </summary>
         /// <param name="picture">picture info</param>
-        /// <param name="path">path to save the picture, include the file name.</param>
+        /// <param name="fileName">the file name</param>
         /// <returns></returns>
-        public async Task SavePictureAsync(Image picture, string path)
+        public async Task SavePictureAsync(Image picture, string fileName)
         {
             if (picture == null)
                 throw new ArgumentNullException(nameof(picture));
+
             var pictureResp
                 = await HttpClient.GetAsync(new Uri(BingBase, picture.Url));
 
             await File.WriteAllBytesAsync(
-                path,
+                Path.Combine(_storagePath, fileName),
                 await pictureResp.Content.ReadAsByteArrayAsync());
         }
 
@@ -79,10 +80,9 @@ namespace SeeTheWorld_Script_v2
         /// </summary>
         /// <param name="picture"></param>
         /// <param name="fileName"></param>
-        /// <returns></returns>
         public async Task AddPictureToApiAsync(Image picture, string fileName)
             => await HttpClient.PostAsync(_apiBase,
-                    new StringContent(
+                new StringContent(
                         JsonSerializer.Serialize(new
                         {
                             title = picture.Copyright,
@@ -91,9 +91,15 @@ namespace SeeTheWorld_Script_v2
                     )
                 );
 
-        public async Task FlushAliCdn(IEnumerable<string> urls)
-        {
-
-        }
+        /// <summary>
+        /// Fresh
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="cdnBase"></param>
+        public void FreshAliCdn(Uri cdnBase, string fileName)
+            => new AliCdnReFresher(
+                Util.ReadConfig()
+            ).Refresh(new Uri(cdnBase, fileName).AbsoluteUri);
     }
+
 }

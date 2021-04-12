@@ -1,9 +1,16 @@
 ﻿using System;
 using SeeTheWorld_Script_v2;
 
-Console.WriteLine("Hello World!");
+Uri cdnBase = new("https://img.cdn.gaein.cn/Bing/");
+Uri apiBase = new("https://api.gaein.cn/SeeTheWorld/");
+const string savePath = @"/data/img/bing/";
 
-var httpHelper = new Helper();
+var httpHelper = new Helper(savePath, apiBase);
 
 var pictureInfo = await httpHelper.GetPictureInfoAsync();
-await httpHelper.SavePictureAsync(pictureInfo);
+
+var fileName = DateTime.Today.ToString("yyyyMMdd") + ".jpg";
+
+await httpHelper.SavePictureAsync(pictureInfo, fileName);
+
+httpHelper.FreshAliCdn(cdnBase, fileName);
