@@ -47,8 +47,6 @@ namespace SeeTheWorld_Script_v2
         /// <returns>Picture info</returns>
         public async Task<Image> GetPictureInfoAsync()
         {
-            Console.WriteLine("Start get image info from bing.");
-
             var url = new Uri(BingBase, BingApi);
 
             var resp = await HttpClient.GetFromJsonAsync<Model>(url, _serializerOptions);
