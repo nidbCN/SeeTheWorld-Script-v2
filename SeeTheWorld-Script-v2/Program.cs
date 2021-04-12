@@ -5,7 +5,7 @@ using SeeTheWorld_Script_v2;
 
 Uri cdnBase = new("https://img.cdn.gaein.cn/Bing/");
 Uri apiBase = new("https://api.gaein.cn/SeeTheWorld/");
-const string savePath = @"/data/img/bing/";
+const string savePath = @"/root/data/wwwroot/cdn/img/bing";
 
 var httpHelper = new Helper(savePath, apiBase);
 
