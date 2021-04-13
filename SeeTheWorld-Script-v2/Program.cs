@@ -11,7 +11,7 @@ var options = new JsonSerializerOptions()
 };
 
 
-const string savePath = @"/root/data/wwwroot/cdn/img/bing";
+const string savePath = @"/home/www-data/wwwroot/cdn/img/bing";
 
 var httpHelper = new Helper(savePath, apiBase);
 
