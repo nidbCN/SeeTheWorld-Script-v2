@@ -23,6 +23,9 @@ var fileName = DateTime.Today.ToString("yyyyMMdd") + ".jpg";
 await httpHelper.SavePictureAsync(pictureInfo, fileName);
 Console.WriteLine("Picture saved at:{0}", Path.Combine(savePath, fileName));
 
+await httpHelper.AddPictureToApiAsync(pictureInfo, fileName);
+Console.WriteLine("Add picture to Api.");
+
 httpHelper.FreshAliCdn(cdnBase, fileName);
 Console.WriteLine("AliCDN Refreshed.");
 
