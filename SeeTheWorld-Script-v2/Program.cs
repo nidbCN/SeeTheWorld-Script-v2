@@ -34,7 +34,7 @@ namespace SeeTheWorld_Script
             Console.WriteLine("Add picture to Api.");
             Console.WriteLine(JsonSerializer.Serialize(new
             {
-                StatusCode = result.StatusCode,
+                result.StatusCode,
                 Message = result.ReasonPhrase,
                 IsSuccess = result.IsSuccessStatusCode,
             }, options));
