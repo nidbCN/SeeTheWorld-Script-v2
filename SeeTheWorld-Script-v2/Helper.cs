@@ -10,9 +10,9 @@ namespace SeeTheWorld_Script_v2
 {
     public class Helper
     {
-        private static Uri BingBase => new("https://cn.bing.com/");
+        public Uri FilePath { get; set; }
+        public Uri BingUrl => new(@"https://cn.bing.com/HPImageArchive.aspx?format=js&n=1&pid=hp");
 
-        private static string BingApi => "HPImageArchive.aspx?format=js&n=1&pid=hp";
 
         private readonly string _storagePath;
 
@@ -33,9 +33,9 @@ namespace SeeTheWorld_Script_v2
             => _httpClient ??= new HttpClient();
 
 
-        public Helper(string storagePath, Uri apiBase, Uri cdnBase)
+        public Helper(Uri storagePath, Uri apiBase, Uri cdnBase)
         {
-            _storagePath = storagePath
+            FilePath = new Uri(storagePath, $"{DateTime.Today:yyyyMMdd}.jpg")
                           ?? throw new ArgumentNullException(nameof(storagePath));
             _apiBase = apiBase
                        ?? throw new ArgumentNullException(nameof(storagePath));
@@ -49,9 +49,7 @@ namespace SeeTheWorld_Script_v2
         /// <returns>Picture info</returns>
         public async Task<Image> GetPictureInfoAsync()
         {
-            var url = new Uri(BingBase, BingApi);
-
-            var resp = await HttpClient.GetFromJsonAsync<Model>(url, _serializerOptions);
+            var resp = await HttpClient.GetFromJsonAsync<Model>(BingUrl, _serializerOptions);
 
             return resp?.Images?[0];
         }
