@@ -1,10 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
-using SeeTheWorld_Script_v2;
 
-namespace SeeTheWorld_Script
+namespace SeeTheWorld_Script_v2
 {
     internal class Program
     {
@@ -21,10 +19,10 @@ namespace SeeTheWorld_Script
             var pictureInfo = await httpHelper.GetPictureInfoAsync();
             Console.WriteLine(JsonSerializer.Serialize(pictureInfo, _jsonOption));
 
-            await httpHelper.SavePictureAsync(pictureInfo, fileName);
-            Console.WriteLine("Picture saved at:{0}", Path.Combine(_savePath, fileName));
+            await httpHelper.SavePictureAsync(pictureInfo);
+            Console.WriteLine("Picture saved at:{0}", httpHelper.FilePath);
 
-            var result = await httpHelper.AddPictureToApiAsync(pictureInfo, fileName);
+            var result = await httpHelper.AddPictureToApiAsync(pictureInfo);
             Console.WriteLine("Add picture to Api.");
             Console.WriteLine(JsonSerializer.Serialize(new
             {
@@ -33,11 +31,10 @@ namespace SeeTheWorld_Script
                 IsSuccess = result.IsSuccessStatusCode,
             }, _jsonOption));
 
-            httpHelper.FreshAliCdn(fileName);
+            httpHelper.FreshAliCdn();
             Console.WriteLine("AliCDN Refreshed.");
 
         }
     }
 
 }
-

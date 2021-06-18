@@ -1,24 +1,19 @@
-﻿using System;
+﻿using AliCDNRefresher;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AliCDNRefresher;
 
 namespace SeeTheWorld_Script_v2
 {
     public class Helper
     {
         public Uri FilePath { get; set; }
-        public Uri BingUrl => new(@"https://cn.bing.com/HPImageArchive.aspx?format=js&n=1&pid=hp");
-
-
-        private readonly string _storagePath;
-
-        private readonly Uri _apiBase;
-
-        private readonly Uri _cdnBase;
+        public Uri ApiUrl { get; set; }
+        public Uri CdnUrl { get; set; }
+        public static Uri BingUrl => new(@"https://cn.bing.com/HPImageArchive.aspx?format=js&n=1&pid=hp");
 
         private readonly JsonSerializerOptions _serializerOptions
             = new()
@@ -32,15 +27,19 @@ namespace SeeTheWorld_Script_v2
         public HttpClient HttpClient
             => _httpClient ??= new HttpClient();
 
-
         public Helper(Uri storagePath, Uri apiBase, Uri cdnBase)
         {
-            FilePath = new Uri(storagePath, $"{DateTime.Today:yyyyMMdd}.jpg")
-                          ?? throw new ArgumentNullException(nameof(storagePath));
-            _apiBase = apiBase
-                       ?? throw new ArgumentNullException(nameof(storagePath));
-            _cdnBase = cdnBase
-                ?? throw new ArgumentNullException(nameof(cdnBase));
+            if (storagePath is null) throw new ArgumentNullException(nameof(storagePath));
+            if (apiBase is null) throw new ArgumentNullException(nameof(apiBase));
+            if (cdnBase is null) throw new ArgumentNullException(nameof(cdnBase));
+
+            var fileName = $"{DateTime.Today:yyyyMMdd}.jpg";
+
+            FilePath = new Uri(storagePath, fileName);
+
+            ApiUrl = new Uri(apiBase, "Pictures");
+
+            CdnUrl = new Uri(cdnBase, fileName);
         }
 
         /// <summary>
@@ -58,18 +57,17 @@ namespace SeeTheWorld_Script_v2
         /// Save picture file from bing to local.
         /// </summary>
         /// <param name="picture">picture info</param>
-        /// <param name="fileName">the file name</param>
         /// <returns></returns>
-        public async Task SavePictureAsync(Image picture, string fileName)
+        public async Task SavePictureAsync(Image picture)
         {
-            if (picture == null)
+            if (picture is null)
                 throw new ArgumentNullException(nameof(picture));
 
             var pictureResp
-                = await HttpClient.GetAsync(new Uri(BingBase, picture.Url));
+                = await HttpClient.GetAsync(BingUrl);
 
             await File.WriteAllBytesAsync(
-                Path.Combine(_storagePath, fileName),
+                FilePath.AbsolutePath,
                 await pictureResp.Content.ReadAsByteArrayAsync());
         }
 
@@ -77,25 +75,23 @@ namespace SeeTheWorld_Script_v2
         /// Add the picture to database var api.
         /// </summary>
         /// <param name="picture"></param>
-        /// <param name="fileName"></param>
-        public async Task<HttpResponseMessage> AddPictureToApiAsync(Image picture, string fileName)
+        public async Task<HttpResponseMessage> AddPictureToApiAsync(Image picture)
             => await HttpClient.PostAsync(
-                new Uri(_apiBase, "Pictures"),
+                ApiUrl,
                 JsonContent.Create(new
                 {
                     title = picture.Copyright,
-                    url = new Uri(_cdnBase, fileName)
+                    url = CdnUrl
                 })
                 );
 
         /// <summary>
         /// Fresh
         /// </summary>
-        /// <param name="fileName"></param>
-        public void FreshAliCdn(string fileName)
+        public void FreshAliCdn()
             => new AliCdnReFresher(
                 Util.ReadConfig()
-            ).Refresh(new Uri(_cdnBase, fileName).AbsoluteUri);
+            ).Refresh(CdnUrl.AbsoluteUri);
     }
 
 }
