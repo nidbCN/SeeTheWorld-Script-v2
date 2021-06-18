@@ -5,11 +5,11 @@ namespace AliCDNRefresher
 {
     public class AliCdnReFresher
     {
-        public SecretModel SecretModel { get; }
+        private readonly SecretModel _secretModel;
 
         public AliCdnReFresher(SecretModel secretModel)
         {
-            SecretModel = secretModel ??
+            _secretModel = secretModel ??
                           throw new ArgumentNullException(nameof(secretModel));
         }
 
@@ -30,7 +30,7 @@ namespace AliCDNRefresher
         /// <param name="paths"></param>
         public void Refresh(string paths)
         {
-            var client = CreateClient(SecretModel.AccessKey, SecretModel.Secret);
+            var client = CreateClient(_secretModel.AccessKey, _secretModel.Secret);
 
             var pushObjectCacheRequest = new AlibabaCloud.SDK.Cdn20180510.Models.PushObjectCacheRequest()
             {

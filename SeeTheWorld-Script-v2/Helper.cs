@@ -3,7 +3,6 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace SeeTheWorld_Script_v2
@@ -14,13 +13,6 @@ namespace SeeTheWorld_Script_v2
         public Uri ApiUrl { get; set; }
         public Uri CdnUrl { get; set; }
         public static Uri BingUrl => new(@"https://cn.bing.com/HPImageArchive.aspx?format=js&n=1&pid=hp");
-
-        private readonly JsonSerializerOptions _serializerOptions
-            = new()
-            {
-                WriteIndented = true,
-                PropertyNameCaseInsensitive = true
-            };
 
         private HttpClient _httpClient;
 
@@ -48,7 +40,7 @@ namespace SeeTheWorld_Script_v2
         /// <returns>Picture info</returns>
         public async Task<Image> GetPictureInfoAsync()
         {
-            var resp = await HttpClient.GetFromJsonAsync<Model>(BingUrl, _serializerOptions);
+            var resp = await HttpClient.GetFromJsonAsync<Model>(BingUrl);
 
             return resp?.Images?[0];
         }
