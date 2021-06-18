@@ -18,6 +18,7 @@ namespace SeeTheWorld_Script_v2
 
         private readonly Uri _apiBase;
 
+        private readonly Uri _cdnBase;
 
         private readonly JsonSerializerOptions _serializerOptions
             = new()
@@ -32,12 +33,14 @@ namespace SeeTheWorld_Script_v2
             => _httpClient ??= new HttpClient();
 
 
-        public Helper(string storagePath, Uri apiBase)
+        public Helper(string storagePath, Uri apiBase, Uri cdnBase)
         {
             _storagePath = storagePath
                           ?? throw new ArgumentNullException(nameof(storagePath));
             _apiBase = apiBase
                        ?? throw new ArgumentNullException(nameof(storagePath));
+            _cdnBase = cdnBase
+                ?? throw new ArgumentNullException(nameof(cdnBase));
         }
 
         /// <summary>
@@ -77,26 +80,24 @@ namespace SeeTheWorld_Script_v2
         /// </summary>
         /// <param name="picture"></param>
         /// <param name="fileName"></param>
-        public async Task AddPictureToApiAsync(Image picture, string fileName)
-            => await HttpClient.PostAsync(_apiBase,
-                new StringContent(
-                        JsonSerializer.Serialize(new
-                        {
-                            title = picture.Copyright,
-                            url = new Uri(_apiBase, fileName)
-                        })
-                    )
+        public async Task<HttpResponseMessage> AddPictureToApiAsync(Image picture, string fileName)
+            => await HttpClient.PostAsync(
+                new Uri(_apiBase, "Pictures"),
+                JsonContent.Create(new
+                {
+                    title = picture.Copyright,
+                    url = new Uri(_cdnBase, fileName)
+                })
                 );
 
         /// <summary>
         /// Fresh
         /// </summary>
         /// <param name="fileName"></param>
-        /// <param name="cdnBase"></param>
-        public void FreshAliCdn(Uri cdnBase, string fileName)
+        public void FreshAliCdn(string fileName)
             => new AliCdnReFresher(
                 Util.ReadConfig()
-            ).Refresh(new Uri(cdnBase, fileName).AbsoluteUri);
+            ).Refresh(new Uri(_cdnBase, fileName).AbsoluteUri);
     }
 
 }
