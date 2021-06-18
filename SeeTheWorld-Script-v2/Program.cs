@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Text.Json;
 using SeeTheWorld_Script_v2;
 
-Uri cdnBase = new("https://img.cdn.gaein.cn/Bing/");
+Uri cdnBase = new("https://img.cdn.gaein.cn/bing/");
 Uri apiBase = new("https://api.gaein.cn/SeeTheWorld/");
 
 var options = new JsonSerializerOptions()
