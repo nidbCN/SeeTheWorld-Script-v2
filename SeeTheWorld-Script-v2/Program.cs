@@ -33,7 +33,6 @@ namespace SeeTheWorld_Script_v2
 
             httpHelper.FreshAliCdn();
             Console.WriteLine("AliCDN Refreshed.");
-
         }
     }
 

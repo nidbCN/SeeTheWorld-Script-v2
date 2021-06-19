@@ -19,6 +19,12 @@ namespace SeeTheWorld_Script_v2
         public HttpClient HttpClient
             => _httpClient ??= new HttpClient();
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="storagePath"></param>
+        /// <param name="apiBase"></param>
+        /// <param name="cdnBase"></param>
         public Helper(Uri storagePath, Uri apiBase, Uri cdnBase)
         {
             if (storagePath is null) throw new ArgumentNullException(nameof(storagePath));
