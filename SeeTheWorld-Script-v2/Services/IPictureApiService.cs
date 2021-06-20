@@ -5,6 +5,6 @@ namespace SeeTheWorld_Script_v2.Services
 {
     public interface IPictureApiService
     {
-        public Task AddPictureAsync(BingPicture picture);
+        public Task<bool> AddPictureAsync(BingPicture picture);
     }
 }

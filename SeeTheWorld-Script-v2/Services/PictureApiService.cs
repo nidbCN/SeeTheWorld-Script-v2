@@ -21,18 +21,19 @@ namespace SeeTheWorld_Script_v2.Services
                                  ?? throw new ArgumentNullException(nameof(httpClientFactory));
         }
 
-        public async Task AddPictureAsync(BingPicture picture)
+        public async Task<bool> AddPictureAsync(BingPicture picture)
         {
             var dto = new
             {
                 title = picture.Copyright,
-                url = new Uri(new Uri(_options.Value.CdnBase), picture.StartDate).AbsoluteUri
+                url = new Uri(_options.Value.CdnBase, picture.StartDate).AbsoluteUri
             };
 
             var client = _httpClientFactory.CreateClient();
 
-            await client.PostAsJsonAsync("",dto);
-
+            var resp = await client.PostAsJsonAsync(new Uri(_options.Value.ApiBase, "Pictures"), dto);
+            
+            return resp.IsSuccessStatusCode;
         }
     }
 }

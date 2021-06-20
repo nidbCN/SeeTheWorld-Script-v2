@@ -2,6 +2,7 @@
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SeeTheWorld_Script_v2.Controllers;
 using SeeTheWorld_Script_v2.Services;
 
 namespace SeeTheWorld_Script_v2
@@ -17,8 +18,10 @@ namespace SeeTheWorld_Script_v2
         {
             var services = new ServiceCollection();
 
+            services.AddTransient<ScriptController>();
             services.AddSingleton<IAliCdnService, AliCdnService>();
             services.AddHttpClient<IBingPictureService, BingPictureService>();
+            services.AddHttpClient<IPictureApiService, PictureApiService>();
 
             return services.BuildServiceProvider();
         }

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
-using SeeTheWorld_Script_v2.Models;
+using SeeTheWorld_Script_v2.Models.Options;
 using System;
 using System.Linq;
 
