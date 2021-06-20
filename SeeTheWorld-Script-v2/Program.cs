@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SeeTheWorld_Script_v2.Services;
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -13,6 +14,8 @@ namespace SeeTheWorld_Script_v2
 
         private static async Task Main()
         {
+            var services = new StartUp().ConfigServices();
+
             var httpHelper = new Helper(_savePath, _apiBase, _cdnBase);
 
             Console.WriteLine("Start get picture from bing.");
