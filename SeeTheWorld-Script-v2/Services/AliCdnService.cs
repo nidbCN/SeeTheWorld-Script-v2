@@ -9,7 +9,7 @@ namespace SeeTheWorld_Script_v2.Services
     {
         private readonly AlibabaCloud.SDK.Cdn20180510.Client _client;
 
-        public AliCdnService(IOptions<AliCdnServiceOption> options)
+        public AliCdnService(IOptions<AliCdnOption> options)
         {
             if (options is null)
                  throw new ArgumentNullException(nameof(options));
