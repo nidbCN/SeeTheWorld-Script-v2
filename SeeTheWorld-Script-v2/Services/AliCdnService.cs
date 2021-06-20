@@ -7,21 +7,20 @@ namespace SeeTheWorld_Script_v2.Services
 {
     public class AliCdnService : IAliCdnService
     {
-        private readonly IOptions<AliCdnServiceOption> _options;
         private readonly AlibabaCloud.SDK.Cdn20180510.Client _client;
 
         public AliCdnService(IOptions<AliCdnServiceOption> options)
         {
-            _options = options
-                ?? throw new ArgumentNullException(nameof(options));
+            if (options is null)
+                 throw new ArgumentNullException(nameof(options));
 
             _client = new AlibabaCloud.SDK.Cdn20180510.Client(
                 new AlibabaCloud.OpenApiClient.Models.Config
                 {
                     // AccessKey ID
-                    AccessKeyId = _options.Value.AccessKeyId,
+                    AccessKeyId = options.Value.AccessKeyId,
                     // AccessKey Secret
-                    AccessKeySecret = _options.Value.AccessKeySecurity,
+                    AccessKeySecret = options.Value.AccessKeySecurity,
                     Endpoint = "cdn.aliyuncs.com",
                 }
                 );

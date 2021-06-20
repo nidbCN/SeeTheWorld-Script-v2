@@ -1,5 +1,7 @@
-﻿using SeeTheWorld_Script_v2.Services;
+﻿using SeeTheWorld_Script_v2.Models;
 using System;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -10,11 +12,19 @@ namespace SeeTheWorld_Script_v2
         private static readonly Uri _cdnBase = new("https://img.cdn.gaein.cn/bing/");
         private static readonly Uri _apiBase = new("https://api.gaein.cn/SeeTheWorld/");
         private static readonly Uri _savePath = new(@"/home/www-data/wwwroot/cdn/img/bing");
-        private static readonly JsonSerializerOptions _jsonOption = new () { WriteIndented = true };
+        private static readonly JsonSerializerOptions _jsonOption = new() { WriteIndented = true };
 
         private static async Task Main()
         {
+            var t = await new HttpClient().GetFromJsonAsync<BingDeSerializeModel>(@"https://cn.bing.com/HPImageArchive.aspx?format=js&n=1&pid=hp");
+
+            Console.WriteLine(JsonSerializer.Serialize(t));
+
+            return;
+
             var services = new StartUp().ConfigServices();
+
+            
 
             var httpHelper = new Helper(_savePath, _apiBase, _cdnBase);
 

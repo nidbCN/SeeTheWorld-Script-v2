@@ -18,7 +18,7 @@ namespace SeeTheWorld_Script_v2
             var services = new ServiceCollection();
 
             services.AddSingleton<IAliCdnService, AliCdnService>();
-
+            services.AddHttpClient<IBingPictureService, BingPictureService>();
 
             return services.BuildServiceProvider();
         }
