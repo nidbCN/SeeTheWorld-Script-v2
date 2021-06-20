@@ -6,6 +6,6 @@ namespace SeeTheWorld_Script_v2.Services
     public interface IBingPictureService
     {
         public Task<BingPicture> GetBingPictureAsync();
-        public Task StorageBingPictureAsync();
+        public Task StorageBingPictureAsync(BingPicture pictureInfo);
     }
 }
