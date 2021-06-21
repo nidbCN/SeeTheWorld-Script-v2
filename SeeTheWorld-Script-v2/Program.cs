@@ -1,7 +1,5 @@
-﻿using SeeTheWorld_Script_v2.Models;
+﻿using SeeTheWorld_Script_v2.Controllers;
 using System;
-using System.Net.Http;
-using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -16,13 +14,13 @@ namespace SeeTheWorld_Script_v2
 
         private static async Task Main()
         {
-            var t = await new HttpClient().GetFromJsonAsync<BingDeSerializeModel>(@"https://cn.bing.com/HPImageArchive.aspx?format=js&n=1&pid=hp");
+            var services = StartUp.ConfigServices();
+            services.GetService<ScriptController>().Start();
 
-            Console.WriteLine(JsonSerializer.Serialize(t));
 
             return;
 
-            var services = new StartUp().ConfigServices();
+            
 
             
 

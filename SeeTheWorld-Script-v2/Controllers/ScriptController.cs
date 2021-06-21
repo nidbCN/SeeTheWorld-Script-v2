@@ -1,16 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using SeeTheWorld_Script_v2.Models;
+using SeeTheWorld_Script_v2.Services;
+using System;
 using System.Threading.Tasks;
 
 namespace SeeTheWorld_Script_v2.Controllers
 {
     public class ScriptController
     {
-        public async Task RunScript()
-        {
+        private readonly IAliCdnService _aliCdnService;
+        private readonly IBingPictureService _bingPictureService;
+        private readonly IPictureApiService _pictureApiService;
 
+        public ScriptController(
+                        IAliCdnService aliCdnService,
+            IBingPictureService bingPictureService,
+            IPictureApiService pictureApiService
+            )
+        {
+            _aliCdnService = aliCdnService
+                ?? throw new ArgumentNullException(nameof(aliCdnService));
+            _bingPictureService = bingPictureService 
+                ?? throw new ArgumentNullException(nameof(bingPictureService));
+            _pictureApiService = pictureApiService
+                ?? throw new ArgumentNullException(nameof(pictureApiService));
+        }
+
+        public void RunScript()
+        {
+            
         }
     }
 }

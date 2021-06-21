@@ -14,11 +14,12 @@ namespace SeeTheWorld_Script_v2
             .AddJsonFile("appSettings.json")
             .Build();
 
-        public IServiceProvider ConfigServices()
+        public static IServiceProvider ConfigServices()
         {
             var services = new ServiceCollection();
 
             services.AddTransient<ScriptController>();
+
             services.AddSingleton<IAliCdnService, AliCdnService>();
             services.AddHttpClient<IBingPictureService, BingPictureService>();
             services.AddHttpClient<IPictureApiService, PictureApiService>();

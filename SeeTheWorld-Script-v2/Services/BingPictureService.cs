@@ -22,16 +22,16 @@ namespace SeeTheWorld_Script_v2.Services
                 ?? throw new ArgumentNullException(nameof(httpClientFactory));
         }
 
-        public async Task<BingPicture> GetBingPictureAsync()
+        public BingPicture GetBingPictureAsync()
         {
             const string url = @"https://cn.bing.com/HPImageArchive.aspx?format=js&n=1&pid=hp";
             var httpClient = _httpClientFactory.CreateClient();
-            var picture = (await httpClient.GetFromJsonAsync<BingDeSerializeModel>(url))?.Images?[0];
+            var picture = (httpClient.GetFromJsonAsync<BingDeSerializeModel>(url)).Result.Images?[0];
 
             return picture;
         }
 
-        public async Task StorageBingPictureAsync(BingPicture pictureInfo)
+        public void StorageBingPictureAsync(BingPicture pictureInfo)
         {
             var fileName = $"{pictureInfo.StartDate}.jpg";
             var path = Path.Combine(_options.Value.StoragePath, fileName);
@@ -39,12 +39,12 @@ namespace SeeTheWorld_Script_v2.Services
             var httpClient = _httpClientFactory.CreateClient();
 
             // ReSharper disable once ConvertToUsingDeclaration
-            await using (var stream = await httpClient.GetStreamAsync($"https://cn.bing.com/{pictureInfo.Url}"))
+            using (var stream = httpClient.GetStreamAsync($"https://cn.bing.com/{pictureInfo.Url}").Result)
             {
                 // ReSharper disable once ConvertToUsingDeclaration
-                await using (var fileStream = File.Open(path, FileMode.Create))
+                using (var fileStream = File.Open(path, FileMode.Create))
                 {
-                    await stream.CopyToAsync(fileStream);
+                    stream.CopyToAsync(fileStream);
                 }
             }
         }
