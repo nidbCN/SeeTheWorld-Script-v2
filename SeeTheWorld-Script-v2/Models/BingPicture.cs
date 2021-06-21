@@ -10,5 +10,6 @@
         public string StartDate { get; set; }
         public string Url { get; set; }
         public string Copyright { get; set; }
+        public string FileName => $"{StartDate}.jpg";
     }
 }

@@ -8,5 +8,7 @@ namespace SeeTheWorld_Script_v2.Services
         public void Refresh(string url);
         public void Refresh(params Uri[] urls);
         public void Refresh(params string[] urls);
+
+        public void RefreshByName(string name);
     }
 }

@@ -8,23 +8,26 @@ namespace SeeTheWorld_Script_v2.Services
     public class AliCdnService : IAliCdnService
     {
         private readonly AlibabaCloud.SDK.Cdn20180510.Client _client;
+        private readonly IOptions<AliCdnOption> _options;
 
         public AliCdnService(IOptions<AliCdnOption> options)
         {
-            if (options is null)
-                 throw new ArgumentNullException(nameof(options));
+            _options = options
+                ?? throw new ArgumentNullException(nameof(options));
 
             _client = new AlibabaCloud.SDK.Cdn20180510.Client(
                 new AlibabaCloud.OpenApiClient.Models.Config
                 {
                     // AccessKey ID
-                    AccessKeyId = options.Value.AccessKeyId,
+                    AccessKeyId = _options.Value.AccessKeyId,
                     // AccessKey Secret
-                    AccessKeySecret = options.Value.AccessKeySecurity,
+                    AccessKeySecret = _options.Value.AccessKeySecret,
                     Endpoint = "cdn.aliyuncs.com",
                 }
                 );
         }
+
+
 
         public void Refresh(string url)
         {
@@ -47,5 +50,8 @@ namespace SeeTheWorld_Script_v2.Services
 
         public void Refresh(params Uri[] urls) =>
             Refresh(urls.Select(it => it.AbsoluteUri).ToArray());
+
+        public void RefreshByName(string name) =>
+            Refresh(new Uri(_options.Value.CdnBase, name));
     }
 }

@@ -1,4 +1,5 @@
-﻿using SeeTheWorld_Script_v2.Controllers;
+﻿using Microsoft.Extensions.DependencyInjection;
+using SeeTheWorld_Script_v2.Controllers;
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -14,9 +15,18 @@ namespace SeeTheWorld_Script_v2
 
         private static async Task Main()
         {
-            var services = StartUp.ConfigServices();
-            services.GetService<ScriptController>().Start();
+            var container = StartUp.ConfigServices();
 
+            var controller = container.GetRequiredService<ScriptController>();
+
+            try
+            {
+                await controller.RunScript();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
             return;
 

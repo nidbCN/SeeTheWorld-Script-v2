@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SeeTheWorld_Script_v2.Controllers;
+using SeeTheWorld_Script_v2.Models.Options;
 using SeeTheWorld_Script_v2.Services;
 
 namespace SeeTheWorld_Script_v2
@@ -14,15 +15,22 @@ namespace SeeTheWorld_Script_v2
             .AddJsonFile("appSettings.json")
             .Build();
 
-        public static IServiceProvider ConfigServices()
+        public static ServiceProvider ConfigServices()
         {
             var services = new ServiceCollection();
 
-            services.AddTransient<ScriptController>();
+            services.Configure<AliCdnOption>(Configuration.GetSection(nameof(AliCdnOption)));
+            services.Configure<BingPictureOption>(Configuration.GetSection(nameof(BingPictureOption)));
+            services.Configure<PictureApiOption>(Configuration.GetSection(nameof(PictureApiOption)));
 
             services.AddSingleton<IAliCdnService, AliCdnService>();
-            services.AddHttpClient<IBingPictureService, BingPictureService>();
-            services.AddHttpClient<IPictureApiService, PictureApiService>();
+
+            services.AddSingleton<IBingPictureService, BingPictureService>();
+            services.AddSingleton<IPictureApiService, PictureApiService>();
+
+            services.AddHttpClient();
+
+            services.AddTransient<ScriptController>();
 
             return services.BuildServiceProvider();
         }

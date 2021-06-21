@@ -26,7 +26,7 @@ namespace SeeTheWorld_Script_v2.Services
             var dto = new
             {
                 title = picture.Copyright,
-                url = new Uri(_options.Value.CdnBase, picture.StartDate).AbsoluteUri
+                url = new Uri(_options.Value.CdnBase, picture.FileName).AbsoluteUri
             };
 
             var client = _httpClientFactory.CreateClient();

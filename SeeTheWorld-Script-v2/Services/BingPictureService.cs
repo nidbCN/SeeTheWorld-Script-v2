@@ -14,7 +14,9 @@ namespace SeeTheWorld_Script_v2.Services
         private readonly IOptions<BingPictureOption> _options;
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public BingPictureService(IOptions<BingPictureOption> options, IHttpClientFactory httpClientFactory)
+        public BingPictureService(
+            IOptions<BingPictureOption> options, 
+            IHttpClientFactory httpClientFactory)
         {
             _options = options
                 ?? throw new ArgumentNullException(nameof(options));
@@ -22,31 +24,26 @@ namespace SeeTheWorld_Script_v2.Services
                 ?? throw new ArgumentNullException(nameof(httpClientFactory));
         }
 
-        public BingPicture GetBingPictureAsync()
+        public BingPicture GetBingPicture()
         {
             const string url = @"https://cn.bing.com/HPImageArchive.aspx?format=js&n=1&pid=hp";
             var httpClient = _httpClientFactory.CreateClient();
-            var picture = (httpClient.GetFromJsonAsync<BingDeSerializeModel>(url)).Result.Images?[0];
-
-            return picture;
+            return httpClient.GetFromJsonAsync<BingDeSerializeModel>(url).Result.Images?[0];
         }
 
-        public void StorageBingPictureAsync(BingPicture pictureInfo)
+        public async Task StorageBingPictureAsync(BingPicture pictureInfo)
         {
-            var fileName = $"{pictureInfo.StartDate}.jpg";
-            var path = Path.Combine(_options.Value.StoragePath, fileName);
+            var path = Path.Combine(
+                _options.Value.StoragePath,
+                pictureInfo.FileName
+            );
 
             var httpClient = _httpClientFactory.CreateClient();
 
-            // ReSharper disable once ConvertToUsingDeclaration
-            using (var stream = httpClient.GetStreamAsync($"https://cn.bing.com/{pictureInfo.Url}").Result)
-            {
-                // ReSharper disable once ConvertToUsingDeclaration
-                using (var fileStream = File.Open(path, FileMode.Create))
-                {
-                    stream.CopyToAsync(fileStream);
-                }
-            }
+            using var stream = await httpClient.GetStreamAsync($"https://cn.bing.com/{pictureInfo.Url}");
+            using var fileStream = new FileStream(path, FileMode.OpenOrCreate);
+
+            await stream.CopyToAsync(fileStream);
         }
     }
 }
