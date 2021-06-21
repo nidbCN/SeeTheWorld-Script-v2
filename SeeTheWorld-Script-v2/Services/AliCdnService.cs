@@ -15,6 +15,7 @@ namespace SeeTheWorld_Script_v2.Services
             _options = options
                 ?? throw new ArgumentNullException(nameof(options));
 
+            // new aliCloud SDK CDN Client
             _client = new AlibabaCloud.SDK.Cdn20180510.Client(
                 new AlibabaCloud.OpenApiClient.Models.Config
                 {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using SeeTheWorld_Script_v2.Extensions;
 using SeeTheWorld_Script_v2.Models;
 using SeeTheWorld_Script_v2.Models.Options;
 using System;
@@ -21,19 +22,19 @@ namespace SeeTheWorld_Script_v2.Services
                                  ?? throw new ArgumentNullException(nameof(httpClientFactory));
         }
 
-        public async Task<bool> AddPictureAsync(BingPicture picture)
+        public async Task AddPictureAsync(BingPicture picture)
         {
             var dto = new
             {
                 title = picture.Copyright,
-                url = new Uri(_options.Value.CdnBase, picture.FileName).AbsoluteUri
+                url = _options.Value.CdnBase.Combine(picture.FileName).AbsoluteUri
             };
 
             var client = _httpClientFactory.CreateClient();
 
-            var resp = await client.PostAsJsonAsync(new Uri(_options.Value.ApiBase, "Pictures"), dto);
+            var resp = await client.PostAsJsonAsync(_options.Value.ApiBase.Combine("/Pictures"), dto);
             
-            return resp.IsSuccessStatusCode;
+            resp.EnsureSuccessStatusCode();
         }
     }
 }
