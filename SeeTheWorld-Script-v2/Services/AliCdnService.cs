@@ -28,7 +28,6 @@ namespace SeeTheWorld_Script_v2.Services
         }
 
 
-
         public void Refresh(string url)
         {
             var pushObjectCacheRequest = new AlibabaCloud.SDK.Cdn20180510.Models.PushObjectCacheRequest()
