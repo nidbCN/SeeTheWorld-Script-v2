@@ -13,14 +13,7 @@ namespace SeeTheWorld_Script_v2
 
             var controller = container.GetRequiredService<ScriptController>();
 
-            try
-            {
-                await controller.RunScript();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            await controller.RunScript();
         }
     }
 

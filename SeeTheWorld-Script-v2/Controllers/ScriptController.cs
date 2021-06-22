@@ -3,6 +3,7 @@ using SeeTheWorld_Script_v2.Services;
 using System;
 using System.Threading.Tasks;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 
 namespace SeeTheWorld_Script_v2.Controllers
 {
@@ -12,11 +13,13 @@ namespace SeeTheWorld_Script_v2.Controllers
         private readonly IBingPictureService _bingPictureService;
         private readonly IPictureApiService _pictureApiService;
         private readonly JsonSerializerOptions _jsonSerializerOptions;
+        private readonly ILogger<ScriptController> _logger;
 
         public ScriptController(
             IAliCdnService aliCdnService,
             IBingPictureService bingPictureService,
-            IPictureApiService pictureApiService
+            IPictureApiService pictureApiService,
+            ILogger<ScriptController> logger
             )
         {
             _aliCdnService = aliCdnService
@@ -25,6 +28,8 @@ namespace SeeTheWorld_Script_v2.Controllers
                 ?? throw new ArgumentNullException(nameof(bingPictureService));
             _pictureApiService = pictureApiService
                 ?? throw new ArgumentNullException(nameof(pictureApiService));
+            _logger = logger 
+                ?? throw new ArgumentNullException(nameof(logger));
 
             _jsonSerializerOptions = new JsonSerializerOptions()
             {
@@ -34,10 +39,14 @@ namespace SeeTheWorld_Script_v2.Controllers
 
         public async Task RunScript()
         {
+            _logger.LogInformation($"Running method {nameof(RunScript)}.");
+
+            _logger.LogInformation("Start query picture infomation from Bing.");
+
             var pictureInfo = _bingPictureService.GetBingPicture();
 
-            Console.WriteLine("Get picture Info");
-            Console.WriteLine(JsonSerializer.Serialize(pictureInfo, _jsonSerializerOptions));
+            _logger.LogInformation(JsonSerializer.Serialize(pictureInfo, _jsonSerializerOptions));
+            _logger.LogInformation("Start save picture from Bing to local.");
 
             await _bingPictureService.StorageBingPictureAsync(pictureInfo);
 

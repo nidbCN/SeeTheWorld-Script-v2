@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 using SeeTheWorld_Script_v2.Controllers;
 using SeeTheWorld_Script_v2.Models.Options;
 using SeeTheWorld_Script_v2.Services;
@@ -17,6 +19,12 @@ namespace SeeTheWorld_Script_v2
         public static ServiceProvider ConfigServices()
         {
             var services = new ServiceCollection();
+
+            services.AddLogging(builder =>
+            {
+                builder.AddEventSourceLogger();
+                builder.AddConsole();
+            });
 
             services.Configure<AliCdnOption>(Configuration.GetSection(nameof(AliCdnOption)));
             services.Configure<BingPictureOption>(Configuration.GetSection(nameof(BingPictureOption)));
