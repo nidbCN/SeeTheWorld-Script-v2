@@ -45,6 +45,8 @@ namespace SeeTheWorld_Script_v2.Services
                 _logger.LogError($"Cannot get picture information from Bing:{ex.Message}");
                 throw ex;
             }
+
+            return resp;
         }
 
         public async Task StorageBingPictureAsync(BingPicture pictureInfo)
