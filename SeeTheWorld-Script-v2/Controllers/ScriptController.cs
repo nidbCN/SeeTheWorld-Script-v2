@@ -41,8 +41,8 @@ namespace SeeTheWorld_Script_v2.Controllers
         {
             _logger.LogInformation($"Running method {nameof(RunScript)}.");
 
-            _logger.LogInformation("Start query picture infomation from Bing.");
 
+            _logger.LogInformation("Start query picture infomation from Bing.");
             var pictureInfo = _bingPictureService.GetBingPicture();
 
             _logger.LogInformation(JsonSerializer.Serialize(pictureInfo, _jsonSerializerOptions));
@@ -50,15 +50,12 @@ namespace SeeTheWorld_Script_v2.Controllers
 
             await _bingPictureService.StorageBingPictureAsync(pictureInfo);
 
-            Console.WriteLine("Save Picture");
+            _logger.LogInformation("Start add picture to WebAPI.");
 
             await _pictureApiService.AddPictureAsync(pictureInfo);
 
-            Console.WriteLine("Push to api");
-
+            _logger.LogInformation("Refresh AliCDN.");
             _aliCdnService.RefreshByName(pictureInfo.FileName);
-
-            Console.WriteLine("Ref CDN");
         }
     }
 }

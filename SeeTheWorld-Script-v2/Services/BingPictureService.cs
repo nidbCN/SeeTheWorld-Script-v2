@@ -35,7 +35,7 @@ namespace SeeTheWorld_Script_v2.Services
             const string url = @"https://cn.bing.com/HPImageArchive.aspx?format=js&n=1&pid=hp";
             var httpClient = _httpClientFactory.CreateClient();
 
-            BingPicture resp = null;
+            BingPicture resp;
             try
             {
                 resp = httpClient.GetFromJsonAsync<BingDeSerializeModel>(url).Result.Images?[0];
