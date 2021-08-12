@@ -26,8 +26,8 @@ namespace SeeTheWorld_Script_v2.Services
         {
             var dto = new
             {
-                title = picture.Copyright,
-                url = _options.Value.CdnBase.Combine(picture.FileName).AbsoluteUri
+                Info = picture.Copyright,
+                Url = _options.Value.CdnBase.Combine(picture.FileName).AbsoluteUri
             };
 
             var client = _httpClientFactory.CreateClient();
