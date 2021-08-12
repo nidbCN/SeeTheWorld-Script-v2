@@ -35,15 +35,11 @@ namespace SeeTheWorld_Script_v2.Services
             const string url = @"https://cn.bing.com/HPImageArchive.aspx?format=js&n=1&pid=hp";
             var httpClient = _httpClientFactory.CreateClient();
 
-            BingPicture resp;
-            try
+            var resp = httpClient.GetFromJsonAsync<BingDeSerializeModel>(url).Result.Images?[0];
+
+            if (resp is null)
             {
-                resp = httpClient.GetFromJsonAsync<BingDeSerializeModel>(url).Result.Images?[0];
-            }
-            catch (HttpRequestException ex)
-            {
-                _logger.LogError($"Cannot get picture information from Bing:{ex.Message}");
-                throw ex;
+                _logger.LogError($"Cannot get picture information from Bing.");
             }
 
             return resp;
